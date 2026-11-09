@@ -789,6 +789,36 @@
     "defaultClientScopes" : [ "web-origins", "acr", "profile", "roles", "basic", "email" ],
     "optionalClientScopes" : [ "attendee", "offline_access", "microprofile-jwt" ]
   }, {
+    "id" : "7c3f9a52-2d1e-4b8a-9f6e-0a4c1d2e3b51",
+    "clientId" : "conference-mcp-devui",
+    "name" : "Quarkus Dev UI for conference-mcp (dev only)",
+    "description" : "Public client the Dev UI Keycloak provider page uses for 'Log into Single Page Application'.",
+    "surrogateAuthRequired" : false,
+    "enabled" : true,
+    "alwaysDisplayInConsole" : false,
+    "clientAuthenticatorType" : "client-secret",
+    "redirectUris" : [ "http://localhost:8081/q/dev-ui/*" ],
+    "webOrigins" : [ "+" ],
+    "notBefore" : 0,
+    "bearerOnly" : false,
+    "consentRequired" : false,
+    "standardFlowEnabled" : true,
+    "implicitFlowEnabled" : false,
+    "directAccessGrantsEnabled" : false,
+    "serviceAccountsEnabled" : false,
+    "publicClient" : true,
+    "frontchannelLogout" : false,
+    "protocol" : "openid-connect",
+    "attributes" : {
+      "realm_client" : "false",
+      "post.logout.redirect.uris" : "+"
+    },
+    "authenticationFlowBindingOverrides" : { },
+    "fullScopeAllowed" : true,
+    "nodeReRegistrationTimeout" : -1,
+    "defaultClientScopes" : [ "web-origins", "acr", "attendee", "profile", "roles", "basic", "email" ],
+    "optionalClientScopes" : [ "offline_access", "microprofile-jwt" ]
+  }, {
     "id" : "1e166672-6083-4947-acbc-1d173a09be34",
     "clientId" : "realm-management",
     "name" : "${client_realm-management}",
