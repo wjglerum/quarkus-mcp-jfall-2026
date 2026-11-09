@@ -163,6 +163,13 @@ See [`RUNBOOK.md`](RUNBOOK.md) for the moment-by-moment script of the three live
 2. **Personal** agenda, ratings, conflicts. Token exchange per hop, full audit.
 3. **Sensitive** speaker-only tools with step-up MFA. Server-driven challenge, and an indirect prompt injection in attendee feedback that step-up and the API's ownership check contain.
 
+## What's next
+
+Two follow-ups the demo deliberately leaves out:
+
+1. **Token exchange delegation with an `act` claim.** The exchanged token would name both the user and the agent acting for them, replacing the `X-Mcp-Acr` / `X-Mcp-Client` trusted-header shortcut. Waiting on the feature to stabilise in Keycloak (preview in 26.8).
+2. **Enterprise-managed authorization.** An optional MCP extension where the company's identity provider decides which MCP servers employees may use. The IdP issues an identity assertion grant (ID-JAG) via token exchange, and the MCP server's authorization server trades it for an access token: no consent screen per MCP server, central control for IT. It is the same token exchange building block this demo uses downstream, applied at the front door. Showing it would need a separate enterprise IdP in front of the MCP server's authorization server, which is out of scope for this talk.
+
 ## Brand palette (lifted from the deck)
 
 | Role | Hex | Where it shows up |
