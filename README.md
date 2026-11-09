@@ -94,6 +94,8 @@ This is the endpoint-level gate. It is distinct from the step-up case in demo 3,
 
 ## Token exchange and step-up across the hop
 
+The MCP authorization spec forbids token passthrough: an MCP server must not forward the token it received to an upstream API. It does not prescribe how to get the upstream token instead. RFC 8693 token exchange is the approach this demo picks, because it keeps the user's identity end to end.
+
 `conference-mcp` never forwards the user's token. `quarkus-rest-client-oidc-token-propagation` with `exchange-token=true` performs an RFC 8693 token exchange at Keycloak before every `conference-api` call. Keycloak allows it only because `conference-mcp` is a confidential client with standard token exchange enabled and the `conference-api` audience in its default client scopes. Any other requested audience is refused. `conference-api` validates `aud=conference-api` in every profile, so a user token sent straight to the API is rejected with a 401.
 
 Keycloak's standard token exchange keeps the user, the roles and the session, but **not the step-up level**: an `acr` of `urn:porto:mfa` comes back as `1` (verified against Keycloak 26.7.4; `scope`, `acr_values` and `claims` on the exchange request do not change it). So the hop that saw the original token enforces and asserts it:

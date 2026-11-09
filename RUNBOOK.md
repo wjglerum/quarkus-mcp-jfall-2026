@@ -240,8 +240,8 @@ DCR is not shown live. It is on the slides right after Demo 1, as the deprecated
      ...
    ```
    `executed_by_client` reads `conference-chat via conference-mcp`: the enterprise app asked, the MCP server called the API with a token it exchanged for one minted for `conference-api`.
-7. **Punchline:** not "AI rated it 5 stars" but "Willem Jan rated it 5 stars, executed by an AI on his behalf, with his token, fully auditable."
-8. Be ready for "isn't forwarding the token passthrough?". No: your token (aud=conference-mcp) stops at the MCP server, which exchanges it (RFC 8693) for a conference-api token per call. Next slide.
+7. **Punchline:** not "AI rated it 5 stars" but "Willem Jan rated it 5 stars, executed by an AI on his behalf, with a token minted for him, fully auditable."
+8. Be ready for "isn't forwarding the token passthrough?". No: your token (aud=conference-mcp) stops at the MCP server, which exchanges it (RFC 8693) for a conference-api token per call. Phrase it precisely: the spec forbids passthrough, and token exchange is how we comply. Don't say the spec requires token exchange; it doesn't. Next slide.
 
 ## Demo 3: Step-up auth and prompt injection (~8 min)
 
