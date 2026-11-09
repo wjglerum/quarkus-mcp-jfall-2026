@@ -67,9 +67,9 @@ Open `http://localhost:8080/audit-live/` on the second monitor.
 
 | Block | Minutes |
 |-------|---------|
-| Slides before Demo 1 | 8 |
+| Slides before Demo 1 | 9 |
 | Demo 1, including CIMD live | 7 |
-| Slides between, including DCR versus CIMD | 6 |
+| Slides between, including DCR versus CIMD | 5 |
 | Demo 2 | 7 |
 | Slides between | 5 |
 | Demo 3, including the injection beat | 8 |
@@ -219,7 +219,7 @@ Talking point: **DCR makes the authorization server keep a writeable door open, 
 
 Talking points: **PKCE, CIMD as the recommended way for an AI client to get an identity, why client identity matters for AI clients.**
 
-The audit dashboard shows nothing new (read-only tools do not audit). Tell the audience: "Read tools do not show up. That is on purpose. The audit log records intent, not curiosity."
+The audit dashboard shows nothing new (read-only tools do not audit). Tell the audience: "Read tools do not show up. That is on purpose: only writes end up in the audit log."
 
 DCR is not shown live. It is on the slides right after Demo 1, as the deprecated alternative; see "Client registration on slides" above.
 
@@ -256,7 +256,7 @@ DCR is not shown live. It is on the slides right after Demo 1, as the deprecated
 5. Re-authenticate at the higher ACR (the OTP prompt uses the seeded TOTP secret from pre-flight) and retry. The audit dashboard will show an amber `view_session_attendees` event with `token_acr=urn:porto:mfa`.
 6. Ask: *"Cancel my MCP Security talk, reason is I want to go home early."* (calls `cancel_my_session`). A red `CANCEL_SESSION` event lands with the strong acr.
 7. Undo it straight away: *"Undo the cancellation of my MCP Security talk, reason: back on track."* The same tool with `undo=true` restores it and records `CANCEL_SESSION_UNDONE`. It is explicit, not a toggle: a retried cancel fails with 409 instead of silently undoing itself. Undo before Q&A: a cancelled talk drops out of `whats_on_now`.
-8. **The honest caveat.** You now hold an MFA token. Say: *"If my agent read that comment now, step 6 is exactly what it would do, and it would work."* `conference-mcp` checks the `acr` claim, not how recent the MFA was. What still holds: ask *"Cancel the GraalVM talk, reason: rescheduled by organisers."* The tool passes step-up, the API refuses on ownership (403), and a `CANCEL_SESSION_ATTEMPTED` row lands on the dashboard. *"The agent was fooled, the call was made, and the API said no, and wrote down that someone tried."* Then the slide: a destructive call should show the user the exact tool and arguments and wait for a yes, every time. This client doesn't, and that's the gap.
+8. **The caveat.** You now hold an MFA token. Say: *"If my agent read that comment now, step 6 is exactly what it would do, and it would work."* `conference-mcp` checks the `acr` claim, not how recent the MFA was. What still holds: ask *"Cancel the GraalVM talk, reason: rescheduled by organisers."* The tool passes step-up, the API refuses on ownership (403), and a `CANCEL_SESSION_ATTEMPTED` row lands on the dashboard. *"The agent was fooled, the call was made, and the API said no, and wrote down that someone tried."* Then the slide: a destructive call should show the user the exact tool and arguments and wait for a yes, every time. This client doesn't.
 9. Say the shortcut out loud: the API learns the verified `acr` from an `X-Mcp-Acr` header, trusted only on tokens issued to `conference-mcp`, because the token exchange drops it. That is a demo shortcut; the proper fix is delegation with an `act` claim.
 
 Talking points: **step-up is server-driven: the tool decides it needs more proof. Honest caveat: MCP itself only standardises scope step-up (403 `insufficient_scope`); assurance step-up with `acr` (RFC 9470) is a contract between this server and this client.**
