@@ -1,4 +1,6 @@
 version: 2
+# Paused for J-Fall (12 November 2026): open-pull-requests-limit 0 stops new
+# version-update pull requests. Restore 5 (maven) and 2 (github-actions) to resume.
 updates:
   - package-ecosystem: maven
     # One entry per module: each module pins its own versions, so the root
@@ -9,7 +11,7 @@ updates:
       - /conference-chat
     schedule:
       interval: monthly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
     # Bundle every Maven bump, across all modules, into one pull request.
     groups:
       maven:
@@ -20,7 +22,7 @@ updates:
     directory: /
     schedule:
       interval: monthly
-    open-pull-requests-limit: 2
+    open-pull-requests-limit: 0
     groups:
       github-actions:
         patterns:
