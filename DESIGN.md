@@ -15,7 +15,7 @@ Every MCP tool sits in one tier. The tier decides what the token must carry, and
 | Speaker | `my_session_feedback` | role `speaker` | no; ratings are shown without attendee names |
 | Speaker, step-up | `view_session_attendees`, `cancel_my_session` | role `speaker` and `acr=urn:jfall:mfa` | yes, including the API's refusals |
 
-Read tools don't write audit rows; only writes are logged. A refused attempt (another speaker's session) is written in its own transaction, so the rollback of the refused request doesn't erase it.
+Read tools don't write audit rows; only writes are logged. A refused attempt is written in its own transaction, so the rollback of the refused request doesn't erase it: another speaker's session (`CANCEL_SESSION_ATTEMPTED`, `VIEW_SESSION_ATTENDEES_DENIED`), a retried cancel or undo that hits the 409, and a cancel without a reason (`CANCEL_SESSION_REJECTED`, `CANCEL_SESSION_UNDO_REJECTED`).
 
 A missing step-up is refused earlier, in `conference-mcp`, before the step-up endpoint is called: only it sees the user's own `acr`. It reports the refusal to `POST /api/v1/audit/refusals` first, which records `CANCEL_SESSION_ATTEMPTED_WITHOUT_STEP_UP` or `VIEW_SESSION_ATTENDEES_ATTEMPTED_WITHOUT_STEP_UP` with the arguments the agent sent. During a prompt injection that row is the first sign that something asked for more than the user did. The endpoint accepts reports only on tokens issued to `conference-mcp` and only for the two step-up tools, so nothing else can write to the log through it. The report is best effort: if it fails, the refusal still stands.
 

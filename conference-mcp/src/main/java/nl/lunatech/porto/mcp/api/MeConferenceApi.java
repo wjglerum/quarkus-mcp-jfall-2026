@@ -93,7 +93,7 @@ public interface MeConferenceApi {
                 String challenge = response.getHeaderString("WWW-Authenticate");
                 if (challenge != null && challenge.contains("insufficient_user_authentication")) {
                     yield new ToolCallException("insufficient_user_authentication: backend requires step-up. "
-                            + "Re-authenticate with acr_values=" + StepUp.MFA_ACR + " and retry.");
+                            + "Re-authenticate with " + StepUp.CHALLENGE_PARAMS + " and retry.");
                 }
                 yield new ToolCallException("authentication_failed: the backend rejected the token"
                         + (challenge == null ? "" : " (" + challenge + ")")

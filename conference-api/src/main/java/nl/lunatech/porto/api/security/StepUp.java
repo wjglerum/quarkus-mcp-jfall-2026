@@ -22,6 +22,9 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @RequestScoped
 public class StepUp {
 
+    /** Matches the Browser Stepup flow's max age in the realm; sent as a hint, not enforced. */
+    static final int MAX_AGE_SECONDS = 300;
+
     public static final String MFA_ACR = "urn:jfall:mfa";
     /** The only client allowed to assert the acr and client of the token it exchanged. */
     public static final String TRUSTED_HOP = "conference-mcp";
@@ -52,7 +55,7 @@ public class StepUp {
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
                     .header("WWW-Authenticate", "Bearer error=\"insufficient_user_authentication\", "
                             + "error_description=\"A different authentication level is required\", "
-                            + "acr_values=\"" + MFA_ACR + "\"")
+                            + "acr_values=\"" + MFA_ACR + "\", max_age=" + MAX_AGE_SECONDS)
                     .build());
         }
     }
