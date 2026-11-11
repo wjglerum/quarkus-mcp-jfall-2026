@@ -61,12 +61,16 @@ public class SpeakerSessionResource {
     public SessionDto cancel(@PathParam("id") Long id, CancelSessionRequest req) {
         stepUp.require();
         if (req == null || req.reason() == null || req.reason().isBlank()) {
+            audit.recordDenied("CANCEL_SESSION_REJECTED", "session:" + id, "reason is required");
             throw new WebApplicationException("reason is required", 400);
         }
         Session session = requireOwnedSession(id, "CANCEL_SESSION_ATTEMPTED");
         // Explicit direction instead of a toggle: a retried call must not silently undo the last one.
         boolean undo = req.undo();
         if (session.cancelled != undo) {
+            String why = undo ? "session is not cancelled" : "session is already cancelled";
+            audit.recordDenied(undo ? "CANCEL_SESSION_UNDO_REJECTED" : "CANCEL_SESSION_REJECTED",
+                    "session:" + id, why + ", reason=" + req.reason());
             throw new WebApplicationException(Response.status(Response.Status.CONFLICT)
                     .entity(ApiError.of("conflict", undo
                             ? "session " + id + " is not cancelled"

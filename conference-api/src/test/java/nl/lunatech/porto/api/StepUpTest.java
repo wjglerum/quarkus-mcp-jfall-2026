@@ -144,7 +144,12 @@ class StepUpTest {
                 .when().get("/api/v1/audit/recent")
                 .then().statusCode(200)
                 .body("action", hasItem("CANCEL_SESSION"))
-                .body("action", hasItem("CANCEL_SESSION_UNDONE"));
+                .body("action", hasItem("CANCEL_SESSION_UNDONE"))
+                // The refused retries are audited too, and survive the rollback.
+                .body("find { it.action == 'CANCEL_SESSION_REJECTED' }.detail",
+                        equalTo("session is already cancelled, reason=retried call"))
+                .body("find { it.action == 'CANCEL_SESSION_UNDO_REJECTED' }.detail",
+                        equalTo("session is not cancelled, reason=undo twice"));
     }
 
     @Test

@@ -13,6 +13,7 @@ import nl.lunatech.porto.mcp.api.ExchangeHopHeaders;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * The token exchange drops the step-up acr and the original client from the token conference-api
@@ -51,6 +52,15 @@ class ExchangeHopHeadersTest {
     void passesAPlainLoginOnAsIs() {
         MultivaluedMap<String, String> out = outgoing();
         assertEquals("1", out.getFirst("X-Mcp-Acr"));
+        assertEquals("claude-desktop", out.getFirst("X-Mcp-Client"));
+    }
+
+    @Test
+    @TestSecurity(user = "attendee", roles = {"attendee"})
+    @OidcSecurity(claims = {@Claim(key = "azp", value = "claude-desktop")})
+    void omitsTheAcrHeaderWhenTheTokenHasNoAcr() {
+        MultivaluedMap<String, String> out = outgoing();
+        assertNull(out.getFirst("X-Mcp-Acr"));
         assertEquals("claude-desktop", out.getFirst("X-Mcp-Client"));
     }
 }

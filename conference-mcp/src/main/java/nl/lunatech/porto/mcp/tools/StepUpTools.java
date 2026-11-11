@@ -32,7 +32,7 @@ public class StepUpTools {
 
     @Tool(name = "view_session_attendees",
             description = "List the display names of attendees who bookmarked one of the speaker's "
-                    + "sessions. Exposes personal data, so it requires recent MFA-backed step-up. If "
+                    + "sessions. Exposes personal data, so it requires MFA-backed step-up. If "
                     + "the token does not satisfy the acr requirement, returns "
                     + "`insufficient_user_authentication`; the client must re-authenticate with "
                     + "`acr_values=urn:jfall:mfa` and retry. Tell the user to sign in "
