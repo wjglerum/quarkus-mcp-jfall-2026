@@ -16,7 +16,7 @@ public final class QuickPrompts {
                 new QuickPrompt("What's happening right now?", "whats_on_now", "public"),
                 new QuickPrompt("What's coming up next?", "whats_next", "public"),
                 new QuickPrompt("Find the Practical MCP talk", "list_sessions", "public"),
-                new QuickPrompt("Bookmark the GraalVM talk for me", "bookmark_session", "attendee"),
+                new QuickPrompt("Bookmark the Gatherers talk for me", "bookmark_session", "attendee"),
                 new QuickPrompt("Show me my agenda", "my_agenda", "attendee"),
                 new QuickPrompt("Do I have any conflicts?", "my_conflicts", "attendee"),
                 new QuickPrompt("Rate the MCP Security talk 5 stars with comment 'great use of caffeine'",

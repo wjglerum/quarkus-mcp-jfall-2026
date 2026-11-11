@@ -25,7 +25,7 @@ public class LlmToolPlanner {
     private static final Logger LOG = Logger.getLogger(LlmToolPlanner.class);
 
     private static final String SYSTEM_PROMPT = """
-            You are the Porto Tech Hub 2026 conference companion. You help the speaker
+            You are the J-Fall 2026 conference companion. You help the speaker
             and the audience on stage. You only invoke the tools provided to
             you, which come from the conference MCP server. Pick exactly one
             tool that matches the user's request and call it with the right

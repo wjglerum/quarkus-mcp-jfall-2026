@@ -1,5 +1,6 @@
 package nl.lunatech.porto.api.dto;
 
+import nl.lunatech.porto.api.clock.Venue;
 import nl.lunatech.porto.api.domain.Session;
 
 import java.time.OffsetDateTime;
@@ -18,7 +19,7 @@ public record SessionDto(
     public static SessionDto of(Session s) {
         return new SessionDto(
                 s.id, s.title, s.abstractText, s.room,
-                s.startsAt, s.endsAt, s.cancelled, s.cancellationReason,
+                Venue.local(s.startsAt), Venue.local(s.endsAt), s.cancelled, s.cancellationReason,
                 SpeakerRef.of(s.speaker));
     }
 }

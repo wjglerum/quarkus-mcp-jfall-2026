@@ -18,7 +18,7 @@ import java.util.Map;
 @ApplicationScoped
 public class StaticScheduleSeeder {
 
-    private static final String AGENDA_RESOURCE = "seed/porto-tech-hub-2026-agenda.json";
+    private static final String AGENDA_RESOURCE = "seed/jfall-2026-agenda.json";
 
     @Transactional
     public int seedIfEmpty() {

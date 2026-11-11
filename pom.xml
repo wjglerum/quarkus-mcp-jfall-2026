@@ -5,10 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>nl.lunatech.porto</groupId>
-    <artifactId>porto-tech-hub-2026-mcp-demo</artifactId>
+    <artifactId>jfall-2026-mcp-demo</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Porto Tech Hub 2026 MCP demo (aggregator)</name>
+    <name>J-Fall 2026 MCP demo (aggregator)</name>
 
     <modules>
         <module>conference-api</module>

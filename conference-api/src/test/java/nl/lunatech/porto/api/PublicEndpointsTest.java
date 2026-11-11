@@ -24,11 +24,11 @@ class PublicEndpointsTest {
 
     @Test
     void filtersByQuery() {
-        given().queryParam("q", "GraalVM")
+        given().queryParam("q", "Gatherers")
                 .when().get("/api/v1/sessions")
                 .then().statusCode(200)
                 .body("size()", greaterThan(0))
-                .body("title[0]", containsString("GraalVM"));
+                .body("title[0]", containsString("Gatherers"));
     }
 
     @Test
@@ -58,7 +58,7 @@ class PublicEndpointsTest {
 
     @Test
     void currentSessionsAtRehearsalClock() {
-        given().queryParam("at", "2026-11-10T11:30:00+00:00")
+        given().queryParam("at", "2026-11-12T08:30:00+01:00")
                 .when().get("/api/v1/sessions/current")
                 .then().statusCode(200)
                 .body("title", hasItem("Practical MCP Security in Action"));
@@ -66,7 +66,7 @@ class PublicEndpointsTest {
 
     @Test
     void nextSessionsRespectsLimit() {
-        given().queryParam("at", "2026-11-10T11:05:00+00:00")
+        given().queryParam("at", "2026-11-12T07:55:00+01:00")
                 .queryParam("limit", 2)
                 .when().get("/api/v1/sessions/next")
                 .then().statusCode(200)

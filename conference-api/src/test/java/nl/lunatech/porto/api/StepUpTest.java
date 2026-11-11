@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.notNullValue;
 @QuarkusTestResource(OidcWiremockTestResource.class)
 class StepUpTest {
 
-    private static final String MFA_ACR = "urn:porto:mfa";
+    private static final String MFA_ACR = "urn:jfall:mfa";
 
     private static String token(String user, Set<String> roles, String acr) {
         return token(user, roles, acr, null);

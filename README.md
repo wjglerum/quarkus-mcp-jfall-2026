@@ -1,5 +1,5 @@
 # Practical MCP Security in Action
-### Porto Tech Hub 2026 / Conference Companion / Demo backend
+### J-Fall 2026 / Conference Companion / Demo backend
 
 > "It wasn't the AI. It was me."
 >
@@ -23,29 +23,29 @@ No Docker compose file: every backing service is auto-provisioned by **Quarkus D
 Three Quarkus apps share one Keycloak realm. Clients authenticate against Keycloak (chat via OIDC code flow + PKCE, MCP Inspector via DCR or CIMD + PKCE), then call the MCP server with a Bearer token. The MCP server validates the token, then exchanges it at Keycloak for a token minted for `conference-api` (RFC 8693 token exchange, delegated so the token names the MCP server as the actor) and calls the API with that. `conference-api` enforces roles and step-up and writes the audit log.
 
 ```mermaid
-graph LR
-  subgraph clients[Clients]
-    USR[Browser user]
-    INS[MCP Inspector]
-  end
+block-beta
+  columns 5
+  space:2
+  KC[("Keycloak 26.8.2\njfall realm\nauthorization server")]
+  space:2
+  space:5
+  CLIENT["Client\nconference-chat :8082\nor MCP Inspector"]
+  space
+  MCP["conference-mcp :8081\nMCP server + tools"]
+  space
+  API["conference-api :8080\nREST + audit + dashboard"]
+  space:4
+  DB[("Postgres")]
 
-  CHAT["conference-chat :8082<br/>OIDC web app + LangChain4j MCP client"]
-  MCP["conference-mcp :8081<br/>MCP server + tools"]
-  API["conference-api :8080<br/>REST + Panache + audit + dashboard"]
-  KC[("Keycloak 26<br/>porto realm")]
-  DB[("Postgres<br/>schedule, agendas, audit")]
-
-  USR -->|HTTPS| CHAT
-  INS -->|MCP streamable HTTP + Bearer| MCP
-  CHAT -->|MCP + user token| MCP
-  CHAT -->|OIDC code flow + PKCE| KC
-  INS -->|DCR or CIMD + PKCE| KC
-  MCP -->|delegated token exchange RFC 8693| KC
-  MCP -->|REST + exchanged Bearer| API
-  MCP -.->|validate JWT| KC
-  API -.->|validate JWT| KC
+  CLIENT -- "1 login + PKCE, consent\ntoken: may_act" --> KC
+  MCP -- "3 delegated exchange\nsubject_token + actor_token" --> KC
+  KC -- "JWKS" --> API
+  CLIENT -- "2 MCP + user token" --> MCP
+  MCP -- "4 REST + token with act" --> API
   API --> DB
 ```
+
+The OAuth triangle: the client and the MCP server each talk to Keycloak for their own token, and only the exchanged token travels on to the API. The API never sees the user's original token.
 
 The heart of the demo is identity propagation without token passthrough. The user's token (audience `conference-mcp`) stops at the MCP server. For each API call the MCP server exchanges it for a new token for the same user with audience `conference-api`, `azp=conference-mcp` and an `act` claim naming `conference-mcp`: the user consented at login that this server may act for them. The action is authorized and audited under the user's identity, and the audit log also names the client that acted (`conference-chat via conference-mcp`, `token_act=conference-mcp`).
 
@@ -58,7 +58,7 @@ sequenceDiagram
   participant API as conference-api
   participant DB as Postgres
 
-  User->>C: "Bookmark the GraalVM talk"
+  User->>C: "Bookmark the Gatherers talk"
   Note over C,KC: First time only: PKCE (plus CIMD or DCR for Inspector)
   C->>KC: Authorization Code + PKCE, scope delegation:client:conference-mcp
   KC->>User: consent: "Allow conference-mcp to act on your behalf?"
@@ -112,7 +112,7 @@ Quarkus' token propagation filter cannot send an `actor_token` yet, so the excha
 
 ### What the exchange still drops
 
-Neither exchange keeps the **step-up level**: an `acr` of `urn:porto:mfa` comes back as `1` (verified against Keycloak 26.7.4 and 26.8.2; `scope`, `acr_values` and `claims` on the exchange request do not change it). And neither says which client the user signed in with: `azp` and `act.client_id` are both `conference-mcp`. So the hop that saw the original token enforces and asserts both:
+Neither exchange keeps the **step-up level**: an `acr` of `urn:jfall:mfa` comes back as `1` (verified against Keycloak 26.7.4 and 26.8.2; `scope`, `acr_values` and `claims` on the exchange request do not change it). And neither says which client the user signed in with: `azp` and `act.client_id` are both `conference-mcp`. So the hop that saw the original token enforces and asserts both:
 
 - `conference-mcp` checks the `acr` on the user's token before any step-up tool runs.
 - It sends what it verified as `X-Mcp-Acr` and the client the user signed in with as `X-Mcp-Client`.
@@ -155,7 +155,7 @@ Without a key, or without network, the chat falls back to a scripted planner tha
 On first start Dev Services boots:
 
 - a **Postgres 18** container for `conference-api` (schema owned by Hibernate via `drop-and-create`, auto-seeded with the schedule and demo data)
-- a **Keycloak 26.8.2** container (pinned in `application.properties`) with the `porto` realm pre-imported, shared between all three apps via `service-name=porto-keycloak`
+- a **Keycloak 26.8.2** container (pinned in `application.properties`) with the `jfall` realm pre-imported, shared between all three apps via `service-name=jfall-keycloak`
 
 The realm export lives once at the monorepo root (`./keycloak-realm.json`). All three apps reference it via `quarkus.keycloak.devservices.realm-path=../keycloak-realm.json`.
 

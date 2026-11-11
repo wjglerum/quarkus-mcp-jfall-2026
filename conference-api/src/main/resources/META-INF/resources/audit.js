@@ -22,7 +22,7 @@
     }
 
     // Venue time, not the laptop's: the presenter's machine may still be on another zone.
-    const VENUE_TZ = 'Europe/Lisbon';
+    const VENUE_TZ = 'Europe/Amsterdam';
     const timeFmt = new Intl.DateTimeFormat('en-GB', {
         timeZone: VENUE_TZ, hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
     });

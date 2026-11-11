@@ -26,7 +26,7 @@ public class PublicTools {
     Optional<String> demoNow;
 
     @Tool(name = "list_sessions",
-            description = "Search the Porto Tech Hub 2026 conference schedule by topic, keyword, or speaker. "
+            description = "Search the J-Fall 2026 conference schedule by topic, keyword, or speaker. "
                     + "Returns matching sessions sorted by start time. Pass `query` for free-text search "
                     + "over titles and abstracts, `speaker_name` to filter by speaker; both may combine.")
     public List<SessionDto> listSessions(
@@ -50,7 +50,7 @@ public class PublicTools {
     }
 
     @Tool(name = "whats_on_now",
-            description = "List the sessions happening right now at Porto Tech Hub 2026. Use for `what is on "
+            description = "List the sessions happening right now at J-Fall 2026. Use for `what is on "
                     + "now`, `what is happening`, `current slot`.")
     public List<SessionDto> whatsOnNow() {
         return api.currentSessions(demoNow.orElse(null));

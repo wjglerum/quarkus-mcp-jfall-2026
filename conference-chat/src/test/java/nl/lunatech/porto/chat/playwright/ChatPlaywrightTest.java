@@ -55,7 +55,7 @@ class ChatPlaywrightTest {
     void anonymousRequestRedirectsToKeycloakLogin() {
         Page page = freshPage();
         page.navigate(chatBase.toString());
-        page.waitForURL("**/realms/porto/protocol/openid-connect/auth**");
+        page.waitForURL("**/realms/jfall/protocol/openid-connect/auth**");
         page.waitForLoadState(LoadState.DOMCONTENTLOADED);
         assertThat(page.locator("#username").isVisible()).isTrue();
         assertThat(page.locator("#kc-login").isVisible()).isTrue();
@@ -95,8 +95,8 @@ class ChatPlaywrightTest {
         // with acr_values so the conditional flow asks for the OTP (Keycloak skips the
         // password thanks to the SSO session)
         page.navigate(chatBase + "step-up");
-        page.waitForURL("**/realms/porto/protocol/openid-connect/auth**");
-        assertThat(page.url()).contains("acr_values=urn%3Aporto%3Amfa");
+        page.waitForURL("**/realms/jfall/protocol/openid-connect/auth**");
+        assertThat(page.url()).contains("acr_values=urn%3Ajfall%3Amfa");
 
         page.locator("#otp").fill(totp("portomcp2026stepupseed"));
         page.locator("#kc-login").click();
@@ -118,7 +118,7 @@ class ChatPlaywrightTest {
      */
     private void login(Page page, String user) {
         page.navigate(chatBase.toString());
-        page.waitForURL("**/realms/porto/protocol/openid-connect/auth**");
+        page.waitForURL("**/realms/jfall/protocol/openid-connect/auth**");
         page.locator("#username").fill(user);
         page.locator("#password").fill(user);
         page.locator("#kc-login").click();

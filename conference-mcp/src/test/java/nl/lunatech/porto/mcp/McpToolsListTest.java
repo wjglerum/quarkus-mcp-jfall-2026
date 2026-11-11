@@ -36,7 +36,7 @@ class McpToolsListTest {
                     assertNotNull(page.findByName("whats_next"));
 
                     assertTrue(page.findByName("list_sessions").description()
-                            .contains("Porto Tech Hub 2026 conference schedule"));
+                            .contains("J-Fall 2026 conference schedule"));
                 })
                 .thenAssertResults();
 

@@ -8,7 +8,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @ApplicationScoped
 public class StepUp {
 
-    public static final String MFA_ACR = "urn:porto:mfa";
+    public static final String MFA_ACR = "urn:jfall:mfa";
 
     @Inject
     JsonWebToken jwt;

@@ -18,7 +18,7 @@ class RatingTest {
     public static class RehearsalClockProfile implements QuarkusTestProfile {
         @Override
         public Map<String, String> getConfigOverrides() {
-            return Map.of("demo.now", "2026-11-10T13:30:00+00:00");
+            return Map.of("demo.now", "2026-11-12T09:30:00+01:00");
         }
     }
 
@@ -43,7 +43,7 @@ class RatingTest {
     @Test
     @TestSecurity(user = "rater-2", roles = {"attendee"})
     void rateSessionThatHasNotStartedReturns422() {
-        int id = sessionId("Tour of Agent Protocols");
+        int id = sessionId("Spring Cleaning");
         given().contentType("application/json")
                 .body("{\"stars\":4,\"comment\":\"too early\"}")
                 .when().post("/api/v1/sessions/" + id + "/ratings")

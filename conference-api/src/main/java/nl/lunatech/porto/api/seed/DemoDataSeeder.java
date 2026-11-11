@@ -192,7 +192,7 @@ public class DemoDataSeeder {
         // issuer (a random localhost port). Attendees browse through an MCP client (Claude,
         // CIMD-registered). The speaker's own step-up actions are left out on purpose: they
         // are the punchline of demo 3 and should land on the dashboard live.
-        String iss = "https://auth.porto.demo/realms/porto";
+        String iss = "https://auth.jfall.demo/realms/jfall";
         String aiClient = "claude-desktop via conference-mcp";
         Object[][] trail = {
                 {"attendee-alice", "BOOKMARK_ADD", "session:" + talk.id, "1", "pwd", aiClient, "Practical MCP Security in Action"},

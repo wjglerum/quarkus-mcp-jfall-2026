@@ -1,7 +1,7 @@
 {
   "id" : "e04f706b-6546-490a-a8d4-15ab3b356f31",
-  "realm" : "porto",
-  "displayName" : "Porto Tech Hub 2026",
+  "realm" : "jfall",
+  "displayName" : "J-Fall 2026",
   "notBefore" : 0,
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
@@ -66,7 +66,7 @@
       "attributes" : { }
     }, {
       "id" : "004f0766-fb34-4385-87b4-4791c1dc3802",
-      "name" : "default-roles-porto",
+      "name" : "default-roles-jfall",
       "description" : "${role_default-roles}",
       "composite" : true,
       "composites" : {
@@ -390,7 +390,7 @@
   "groups" : [ ],
   "defaultRole" : {
     "id" : "004f0766-fb34-4385-87b4-4791c1dc3802",
-    "name" : "default-roles-porto",
+    "name" : "default-roles-jfall",
     "description" : "${role_default-roles}",
     "composite" : true,
     "clientRole" : false,
@@ -453,14 +453,14 @@
     }, {
       "id" : "6cbbe588-abf8-4eb0-b186-e3f838a763bd",
       "type" : "otp",
-      "userLabel" : "Porto Tech Hub demo authenticator",
+      "userLabel" : "J-Fall demo authenticator",
       "createdDate" : 1793361699942,
       "secretData" : "{\"value\":\"portomcp2026stepupseed\"}",
       "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "speaker", "default-roles-porto", "attendee" ],
+    "realmRoles" : [ "speaker", "default-roles-jfall", "attendee" ],
     "notBefore" : 0,
     "groups" : [ ]
   }, {
@@ -482,7 +482,7 @@
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-porto", "attendee" ],
+    "realmRoles" : [ "default-roles-jfall", "attendee" ],
     "notBefore" : 0,
     "groups" : [ ]
   }, {
@@ -510,7 +510,7 @@
     "credentials" : [ ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "default-roles-porto" ],
+    "realmRoles" : [ "default-roles-jfall" ],
     "notBefore" : 0,
     "groups" : [ ]
   }, {
@@ -532,14 +532,14 @@
     }, {
       "id" : "3ed0507c-bb9d-475a-812e-472923a70daa",
       "type" : "otp",
-      "userLabel" : "Porto Tech Hub demo authenticator",
+      "userLabel" : "J-Fall demo authenticator",
       "createdDate" : 1793361699920,
       "secretData" : "{\"value\":\"portomcp2026stepupseed\"}",
       "credentialData" : "{\"subType\":\"totp\",\"digits\":6,\"counter\":0,\"period\":30,\"algorithm\":\"HmacSHA1\"}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
-    "realmRoles" : [ "speaker", "default-roles-porto", "attendee" ],
+    "realmRoles" : [ "speaker", "default-roles-jfall", "attendee" ],
     "notBefore" : 0,
     "groups" : [ ]
   } ],
@@ -561,12 +561,12 @@
     "clientId" : "account",
     "name" : "${client_account}",
     "rootUrl" : "${authBaseUrl}",
-    "baseUrl" : "/realms/porto/account/",
+    "baseUrl" : "/realms/jfall/account/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/realms/porto/account/*" ],
+    "redirectUris" : [ "/realms/jfall/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -592,12 +592,12 @@
     "clientId" : "account-console",
     "name" : "${client_account-console}",
     "rootUrl" : "${authBaseUrl}",
-    "baseUrl" : "/realms/porto/account/",
+    "baseUrl" : "/realms/jfall/account/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/realms/porto/account/*" ],
+    "redirectUris" : [ "/realms/jfall/account/*" ],
     "webOrigins" : [ ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -1089,12 +1089,12 @@
     "clientId" : "security-admin-console",
     "name" : "${client_security-admin-console}",
     "rootUrl" : "${authAdminUrl}",
-    "baseUrl" : "/admin/porto/console/",
+    "baseUrl" : "/admin/jfall/console/",
     "surrogateAuthRequired" : false,
     "enabled" : true,
     "alwaysDisplayInConsole" : false,
     "clientAuthenticatorType" : "client-secret",
-    "redirectUris" : [ "/admin/porto/console/*" ],
+    "redirectUris" : [ "/admin/jfall/console/*" ],
     "webOrigins" : [ "+" ],
     "notBefore" : 0,
     "bearerOnly" : false,
@@ -2807,7 +2807,7 @@
     "parRequestUriLifespan" : "60",
     "clientSessionMaxLifespan" : "0",
     "scimApiEnabled" : "false",
-    "acr.loa.map" : "{\"urn:porto:mfa\": \"2\"}"
+    "acr.loa.map" : "{\"urn:jfall:mfa\": \"2\"}"
   },
   "keycloakVersion" : "26.8.2",
   "userManagedAccessAllowed" : false,

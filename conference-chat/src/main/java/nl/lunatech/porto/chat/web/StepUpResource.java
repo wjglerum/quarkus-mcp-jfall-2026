@@ -13,7 +13,7 @@ import jakarta.ws.rs.core.MediaType;
  * Step-up entry point, opened by the chat in a popup window. Requiring the MFA
  * authentication context makes Quarkus OIDC re-challenge the user (when the current session
  * is only password-backed), so Keycloak runs the MFA flow and returns a token with
- * acr=urn:porto:mfa. The OIDC callback rewrites the session cookie for the
+ * acr=urn:jfall:mfa. The OIDC callback rewrites the session cookie for the
  * whole origin, so the main chat page is upgraded without ever navigating.
  *
  * <p>Reaching this method proves the MFA context is satisfied. The returned page signals
@@ -31,7 +31,7 @@ public class StepUpResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     // maxAge mirrors the realm's LoA2 loa-max-age of 300s
-    @AuthenticationContext(value = "urn:porto:mfa", maxAge = "PT5M")
+    @AuthenticationContext(value = "urn:jfall:mfa", maxAge = "PT5M")
     public TemplateInstance stepUp() {
         return Templates.complete();
     }

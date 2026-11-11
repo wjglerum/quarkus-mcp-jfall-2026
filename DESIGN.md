@@ -13,7 +13,7 @@ Every MCP tool sits in one tier. The tier decides what the token must carry, and
 | Public | `list_sessions`, `get_session`, `whats_on_now`, `whats_next` | a token with the `attendee` scope (the whole `/mcp` endpoint) | no |
 | Attendee | `bookmark_session`, `unbookmark_session`, `my_agenda`, `my_conflicts`, `rate_session`, `my_ratings` | role `attendee` | writes only |
 | Speaker | `my_session_feedback` | role `speaker` | no; ratings are shown without attendee names |
-| Speaker, step-up | `view_session_attendees`, `cancel_my_session` | role `speaker` and `acr=urn:porto:mfa` | yes, including the API's refusals |
+| Speaker, step-up | `view_session_attendees`, `cancel_my_session` | role `speaker` and `acr=urn:jfall:mfa` | yes, including the API's refusals |
 
 Read tools don't write audit rows; only writes are logged. A refused attempt (another speaker's session) is written in its own transaction, so the rollback of the refused request doesn't erase it.
 
@@ -50,7 +50,7 @@ These are deliberate, and each should be called out if someone asks:
 - **CIMD over plain HTTP.** The spec requires an HTTPS `client_id`. The demo serves it over HTTP on `host.docker.internal`, which needs two more demo-only settings: the realm's `cimd-profile` has **Allow http scheme** on (and `cimd-policy` matches `http` client ids), and `conference-mcp` accepts the `Host: host.docker.internal` header in dev (`%dev.quarkus.http.host-validation.allowed-hosts`) so Keycloak's fetch from inside its container isn't rejected. A real deployment serves the metadata document over HTTPS on a public host and needs neither.
 - **Open audit feed.** `/api/v1/audit/recent` and `/audit-live/` need no login so they can run on the second screen. A real deployment puts them behind an auditor role.
 - **Scripted fallback planner.** If the LLM is unreachable, `conference-chat` maps the rehearsed prompts to tool calls itself and says so in the reply. The MCP calls, tokens and audit trail are identical.
-- **Demo clock.** `DEMO_NOW` pins "now" to 10 November 2026, 11:40 venue time, so `whats_on_now` and the rating cutoff behave the same in every rehearsal.
+- **Demo clock.** `DEMO_NOW` pins "now" to 12 November 2026, 08:30 venue time (Pathé Ede, CET), halfway through the talk, so `whats_on_now` and the rating cutoff behave the same in every rehearsal.
 
 ## Production configuration
 

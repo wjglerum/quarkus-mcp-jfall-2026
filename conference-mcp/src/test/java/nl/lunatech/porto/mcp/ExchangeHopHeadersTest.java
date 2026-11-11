@@ -31,10 +31,10 @@ class ExchangeHopHeadersTest {
 
     @Test
     @TestSecurity(user = "willem.jan", roles = {"attendee", "speaker"})
-    @OidcSecurity(claims = {@Claim(key = "acr", value = "urn:porto:mfa"), @Claim(key = "azp", value = "conference-chat")})
+    @OidcSecurity(claims = {@Claim(key = "acr", value = "urn:jfall:mfa"), @Claim(key = "azp", value = "conference-chat")})
     void assertsTheVerifiedStepUpAndTheOriginalClient() {
         MultivaluedMap<String, String> out = outgoing();
-        assertEquals("urn:porto:mfa", out.getFirst("X-Mcp-Acr"));
+        assertEquals("urn:jfall:mfa", out.getFirst("X-Mcp-Acr"));
         assertEquals("conference-chat", out.getFirst("X-Mcp-Client"));
     }
 
@@ -42,7 +42,7 @@ class ExchangeHopHeadersTest {
     @TestSecurity(user = "willem.jan", roles = {"attendee", "speaker"})
     @OidcSecurity(claims = {@Claim(key = "acr", value = "2"), @Claim(key = "azp", value = "conference-chat")})
     void normalisesTheNumericLevelOfAuthentication() {
-        assertEquals("urn:porto:mfa", outgoing().getFirst("X-Mcp-Acr"));
+        assertEquals("urn:jfall:mfa", outgoing().getFirst("X-Mcp-Acr"));
     }
 
     @Test

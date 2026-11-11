@@ -22,7 +22,7 @@ import org.eclipse.microprofile.jwt.JsonWebToken;
 @RequestScoped
 public class StepUp {
 
-    public static final String MFA_ACR = "urn:porto:mfa";
+    public static final String MFA_ACR = "urn:jfall:mfa";
     /** The only client allowed to assert the acr and client of the token it exchanged. */
     public static final String TRUSTED_HOP = "conference-mcp";
     public static final String ACR_HEADER = "X-Mcp-Acr";

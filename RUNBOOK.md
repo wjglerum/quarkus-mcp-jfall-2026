@@ -1,6 +1,6 @@
 # Runbook: Practical MCP Security in Action
 
-The stage-side runbook for the three live demos at Porto Tech Hub 2026.
+The stage-side runbook for the three live demos at J-Fall 2026.
 
 ## Stage assumptions
 
@@ -12,7 +12,7 @@ The stage-side runbook for the three live demos at Porto Tech Hub 2026.
 
 ## Pre-flight: step-up demo prerequisite
 
-The seeded realm ships a TOTP credential for `willem.jan` and a `Browser Stepup` authentication flow that maps `urn:porto:mfa` to LoA 2 (OTP, re-prompted after 5 minutes). Keycloak stores the raw secret `portomcp2026stepupseed`; authenticator apps want its Base32 form. Add it to a TOTP app on your phone before the talk (manual entry, SHA1, 6 digits, 30s):
+The seeded realm ships a TOTP credential for `willem.jan` and a `Browser Stepup` authentication flow that maps `urn:jfall:mfa` to LoA 2 (OTP, re-prompted after 5 minutes). Keycloak stores the raw secret `portomcp2026stepupseed`; authenticator apps want its Base32 form. Add it to a TOTP app on your phone before the talk (manual entry, SHA1, 6 digits, 30s):
 
 ```
 OBXXE5DPNVRXAMRQGI3HG5DFOB2XA43FMVSA
@@ -26,7 +26,7 @@ What the audience sees in Demo 3: `conference-mcp` checks the `acr` on your toke
 
 | Variable | Purpose | Demo default |
 |----------|---------|--------------|
-| `DEMO_NOW` | Override the "current time" used by `whats_on_now`, `whats_next`, and the rating cutoff. | `2026-11-10T11:40:00+00:00` |
+| `DEMO_NOW` | Override the "current time" used by `whats_on_now`, `whats_next`, and the rating cutoff. | `2026-11-12T08:30:00+01:00` |
 | `ANTHROPIC_API_KEY` | The LLM behind `conference-chat`. Without it the chat falls back to the scripted planner. | required in Terminal 3 |
 | `DEMO_PLANNER` | `llm` asks the model and falls back to scripted prompts if it fails or takes over 15s. `scripted` never calls the model: use it when the wifi is gone. | `llm` |
 
@@ -36,14 +36,14 @@ What the audience sees in Demo 3: `conference-mcp` checks the `acr` on your toke
 
 ```bash
 # Terminal 1 - starts Postgres + Keycloak Dev Services on first boot
-cd conference-api && DEMO_NOW=2026-11-10T11:40:00+00:00 ./mvnw quarkus:dev
+cd conference-api && DEMO_NOW=2026-11-12T08:30:00+01:00 ./mvnw quarkus:dev
 
 # Terminal 2 - joins the shared Keycloak container
-cd conference-mcp && DEMO_NOW=2026-11-10T11:40:00+00:00 ./mvnw quarkus:dev
+cd conference-mcp && DEMO_NOW=2026-11-12T08:30:00+01:00 ./mvnw quarkus:dev
 
 # Terminal 3 - chat client, joins the same Keycloak container
 export ANTHROPIC_API_KEY=...
-cd conference-chat && DEMO_NOW=2026-11-10T11:40:00+00:00 ./mvnw quarkus:dev
+cd conference-chat && DEMO_NOW=2026-11-12T08:30:00+01:00 ./mvnw quarkus:dev
 ```
 
 The first start pulls the Postgres and Keycloak images. Allow 30 to 60 seconds on a fresh machine; subsequent restarts reuse the containers.
@@ -54,11 +54,11 @@ Open `http://localhost:8080/audit-live/` on the second monitor.
 
 1. `curl http://localhost:8080/api/v1/sessions | jq '.[0]'` returns a real session.
 2. The audit dashboard shows the five seeded attendee events (alice, bob, carol, dave, erin) and nothing from `willem.jan`. Any `willem.jan` row is rehearsal data: reset Postgres (see Recovery).
-3. Open the Dev UI at `http://localhost:8080/q/dev/` and click the **Keycloak** tile. Confirm realm `porto` is imported with `attendee`, `willem.jan`, and `admin-demo`.
+3. Open the Dev UI at `http://localhost:8080/q/dev/` and click the **Keycloak** tile. Confirm realm `jfall` is imported with `attendee`, `willem.jan`, and `admin-demo`.
 4. From the Dev UI Keycloak tile, copy the realm URL. Paste `http://<dev-keycloak-url>/.well-known/openid-configuration` into a browser tab and confirm 200.
 5. Hit `http://localhost:8082/` in a browser; log in as `attendee / attendee`. The Qute shell renders with the quick prompts. Click *"What's happening right now?"* once: a real answer proves the API key and the MCP connection.
 6. Start the apps (and so Keycloak) at least 15 minutes before the slot; the first container start is the slow one.
-7. Venue wifi: tether to a phone hotspot for the LLM. Run `npx -y @modelcontextprotocol/inspector@latest` once beforehand so the download is cached, and leave Inspector's `porto-conference` server configured for CIMD (see "Drive it from Inspector").
+7. Venue wifi: tether to a phone hotspot for the LLM. Run `npx -y @modelcontextprotocol/inspector@latest` once beforehand so the download is cached, and leave Inspector's `jfall-conference` server configured for CIMD (see "Drive it from Inspector").
 8. Do one full dry run after a clean Postgres restart (see Recovery) so the seeds and the cancellation are reset. Then restart once more: the dry run leaves your bookmarks, rating and cancellation behind.
 9. Notifications off, sleep off, backup videos queued.
 10. LLM fallback: if the model fails, the chat answers the sidebar and runbook prompts from a scripted planner and says so in the reply ("Scripted fallback (LLM unavailable)"). With no network at all, restart `conference-chat` with `DEMO_PLANNER=scripted` so nothing waits on a timeout. Every tool also runs from MCP Inspector.
@@ -95,7 +95,7 @@ Point MCP Inspector at the streamable HTTP endpoint `http://localhost:8081/mcp` 
 
 The whole `/mcp` endpoint requires the `attendee` scope, so the first unauthenticated request returns a `401` whose `WWW-Authenticate` header carries the `resource_metadata` pointer. That is the spec-compliant signal that starts the discovery above. A token that authenticates but lacks the `attendee` scope returns a `403` with `error="insufficient_scope", scope="attendee"`, emitted by the `quarkus-mcp-server-oidc` extension. Both challenges name the resource metadata URL so the client knows where to go next.
 
-The `porto` realm is deliberately configured for **open anonymous DCR** so Inspector can register with no pre-shared credentials. Keycloak ships four anonymous client-registration policies that each block or cripple a DCR client. Three are cleared in `keycloak-realm.json`; Consent Required stays on deliberately:
+The `jfall` realm is deliberately configured for **open anonymous DCR** so Inspector can register with no pre-shared credentials. Keycloak ships four anonymous client-registration policies that each block or cripple a DCR client. Three are cleared in `keycloak-realm.json`; Consent Required stays on deliberately:
 
 | Removed/changed policy | Why it had to go |
 |------------------------|------------------|
@@ -158,7 +158,7 @@ Because Dev Services reuses the shared Keycloak container, the feature only take
 Confirm the feature is live from the Keycloak startup log:
 
 ```bash
-docker logs $(docker ps -q --filter "label=quarkus-dev-service-keycloak=porto-keycloak") 2>&1 \
+docker logs $(docker ps -q --filter "label=quarkus-dev-service-keycloak=jfall-keycloak") 2>&1 \
   | grep -i "features enabled"
 # expect a line listing cimd, e.g. "Experimental features enabled: cimd:v1"
 ```
@@ -209,7 +209,7 @@ Talking point: **DCR makes the authorization server keep a writeable door open, 
 
 1. Open the conference-chat browser at `http://localhost:8082/`. MCP Inspector at `http://localhost:8081/mcp` is the backup client only.
 2. Log in as **attendee / attendee**.
-3. Ask: *"What's happening right now?"* (calls `whats_on_now`). At 11:40 that is eight sessions, including this talk.
+3. Ask: *"What's happening right now?"* (calls `whats_on_now`). At 08:30 that is seven sessions, including this talk.
 4. Ask: *"What's coming up next?"* (calls `whats_next`).
 5. Highlight PKCE: the `conference-chat` terminal logs a line on every login, e.g.
    ```
@@ -229,9 +229,9 @@ DCR is not shown live. It is on the slides right after Demo 1, as the deprecated
 
 1. Click **Sign out** in the chat's top bar (it ends the Keycloak session too), then log in as **willem.jan / willem.jan**. Demo 2 and 3 both run as you, and the audit punchline names you. The agenda starts empty.
    - **Consent beat.** After the password, Keycloak asks *"Allow conference-mcp to act on your behalf?"*. Stop on it: *"This is delegation. I'm not handing my token to the MCP server. I'm telling my identity provider that this server may act for me. Click no, and the agent gets nothing."* Click **Yes**. It comes back on every login, because Keycloak never remembers a delegation consent.
-2. Ask: *"Bookmark the GraalVM talk for me."* (calls `bookmark_session`). A blue `BOOKMARK_ADD` event flies onto the audit dashboard.
+2. Ask: *"Bookmark the Gatherers talk for me."* (calls `bookmark_session`). A blue `BOOKMARK_ADD` event flies onto the audit dashboard.
 3. Ask: *"Show me my agenda."* (calls `my_agenda`).
-4. Ask: *"Also add the Practical MCP Security talk."* Then *"Do I have any conflicts?"* (calls `my_conflicts`; both run 11:10 to 12:00).
+4. Ask: *"Also add the Practical MCP Security talk."* Then *"Do I have any conflicts?"* (calls `my_conflicts`; both run 08:00 to 08:50).
 5. Ask: *"Rate the MCP Security talk 5 stars with the comment 'great use of caffeine'."* (calls `rate_session`). A `RATE_SESSION` event lands, with `attendee_subject=willem.jan`.
 6. Turn to the second monitor and read the event aloud:
    ```
@@ -257,11 +257,11 @@ DCR is not shown live. It is on the slides right after Demo 1, as the deprecated
    - **If the model ignores it** (current Claude models usually do; the scripted planner always does), say: *"Good model. But the model is not my security boundary. Let's assume it fell for it."* In MCP Inspector, signed in as `willem.jan` (no MFA), call `cancel_my_session` with `session_query` "Practical MCP Security" and the injected reason. Same `insufficient_user_authentication` refusal, before the API is called.
    - Either way, an amber `CANCEL_SESSION_ATTEMPTED_WITHOUT_STEP_UP` row lands on the dashboard with the injected reason in its detail. Point at it: *"The attack failed, and the log has the attacker's words in it."*
 3. Ask: *"Who signed up to attend my MCP Security talk?"* (calls `view_session_attendees`).
-4. `conference-mcp` refuses with the tool error `insufficient_user_authentication` before it calls the API. The chat shows it as an amber step-up card; point at the same line in the `conference-mcp` terminal. Talk through what the client does next: re-auth with `acr_values=urn:porto:mfa`, retry the tool call.
-5. Re-authenticate at the higher ACR (the OTP prompt uses the seeded TOTP secret from pre-flight) and retry. The step-up popup asks for the OTP **and then the delegation consent again**: click **Yes**, or the popup ends without a token. The audit dashboard will show an amber `view_session_attendees` event with `token_acr=urn:porto:mfa`.
+4. `conference-mcp` refuses with the tool error `insufficient_user_authentication` before it calls the API. The chat shows it as an amber step-up card; point at the same line in the `conference-mcp` terminal. Talk through what the client does next: re-auth with `acr_values=urn:jfall:mfa`, retry the tool call.
+5. Re-authenticate at the higher ACR (the OTP prompt uses the seeded TOTP secret from pre-flight) and retry. The step-up popup asks for the OTP **and then the delegation consent again**: click **Yes**, or the popup ends without a token. The audit dashboard will show an amber `view_session_attendees` event with `token_acr=urn:jfall:mfa`.
 6. Ask: *"Cancel my MCP Security talk, reason is I want to go home early."* (calls `cancel_my_session`). A red `CANCEL_SESSION` event lands with the strong acr.
 7. Undo it straight away: *"Undo the cancellation of my MCP Security talk, reason: back on track."* The same tool with `undo=true` restores it and records `CANCEL_SESSION_UNDONE`. It is explicit, not a toggle: a retried cancel fails with 409 instead of silently undoing itself. Undo before Q&A: a cancelled talk drops out of `whats_on_now`.
-8. **The caveat.** You now hold an MFA token. Say: *"If my agent read that comment now, step 6 is exactly what it would do, and it would work."* `conference-mcp` checks the `acr` claim, not how recent the MFA was. What still holds: ask *"Cancel the GraalVM talk, reason: rescheduled by organisers."* The tool passes step-up, the API refuses on ownership (403), and a `CANCEL_SESSION_ATTEMPTED` row lands on the dashboard. *"The agent was fooled, the call was made, and the API said no, and wrote down that someone tried."* Then the slide: a destructive call should show the user the exact tool and arguments and wait for a yes, every time. This client doesn't.
+8. **The caveat.** You now hold an MFA token. Say: *"If my agent read that comment now, step 6 is exactly what it would do, and it would work."* `conference-mcp` checks the `acr` claim, not how recent the MFA was. What still holds: ask *"Cancel the Gatherers talk, reason: rescheduled by organisers."* The tool passes step-up, the API refuses on ownership (403), and a `CANCEL_SESSION_ATTEMPTED` row lands on the dashboard. *"The agent was fooled, the call was made, and the API said no, and wrote down that someone tried."* Then the slide: a destructive call should show the user the exact tool and arguments and wait for a yes, every time. This client doesn't.
 9. Say the shortcut out loud: the API learns the verified `acr` from an `X-Mcp-Acr` header, trusted only on tokens whose acting client is `conference-mcp`, because the token exchange drops it, delegated or not. That is a demo shortcut, and the fix belongs in the authorization server. See "Q&A: token exchange and delegation" below.
 
 Talking points: **step-up is server-driven: the tool decides it needs more proof. Honest caveat: MCP itself only standardises scope step-up (403 `insufficient_scope`); assurance step-up with `acr` (RFC 9470) is a contract between this server and this client.**
@@ -316,7 +316,7 @@ Editing `keycloak-realm.json` has no effect until Keycloak re-imports it, and De
 ```bash
 # 1. Ctrl-C all three quarkus:dev processes.
 # 2. Remove the shared Keycloak container so Dev Services cannot reuse it:
-docker rm -f $(docker ps -aq --filter "label=quarkus-dev-service-keycloak=porto-keycloak")
+docker rm -f $(docker ps -aq --filter "label=quarkus-dev-service-keycloak=jfall-keycloak")
 # 3. Restart conference-api FIRST (it creates Keycloak and imports the realm), then mcp, then chat.
 ```
 

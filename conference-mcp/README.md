@@ -1,6 +1,6 @@
 # conference-mcp
 
-Quarkus MCP server for the Porto Tech Hub 2026 demo. Thin protocol adapter that exposes
+Quarkus MCP server for the J-Fall 2026 demo. Thin protocol adapter that exposes
 conference tools to AI clients, secured with OIDC. Calls to `conference-api` carry
 a token obtained through RFC 8693 token exchange, never the user's own token.
 

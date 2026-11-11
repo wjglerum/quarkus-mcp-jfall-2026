@@ -9,7 +9,7 @@ class SessionResolverTest {
     @Test
     void dropsTheWordsAModelAddsAroundATitle() {
         assertEquals("MCP Security", SessionResolver.stripFiller("my MCP Security talk"));
-        assertEquals("GraalVM", SessionResolver.stripFiller("the GraalVM session"));
+        assertEquals("Gatherers", SessionResolver.stripFiller("the Gatherers session"));
     }
 
     @Test

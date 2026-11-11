@@ -38,8 +38,8 @@ class PublicToolsMcpTest {
     @RestClient
     PublicConferenceApi api;
 
-    private static final OffsetDateTime START = OffsetDateTime.parse("2026-11-10T11:10:00+00:00");
-    private static final OffsetDateTime END = OffsetDateTime.parse("2026-11-10T12:00:00+00:00");
+    private static final OffsetDateTime START = OffsetDateTime.parse("2026-11-12T08:00:00+01:00");
+    private static final OffsetDateTime END = OffsetDateTime.parse("2026-11-12T08:50:00+01:00");
 
     /** Concatenates the text of every content item in a tool response. */
     private static String allText(ToolResponse response) {
@@ -49,7 +49,7 @@ class PublicToolsMcpTest {
     }
 
     private static SessionDto session(long id, String title) {
-        return new SessionDto(id, title, "An abstract for " + title, "Sofico track",
+        return new SessionDto(id, title, "An abstract for " + title, "Room 7",
                 START, END, false, null, new SpeakerRef(7L, "Ada Lovelace"));
     }
 
@@ -65,7 +65,7 @@ class PublicToolsMcpTest {
                     assertFalse(response.isError());
                     String text = response.firstContent().asText().text();
                     assertTrue(text.contains("MCP Security in Practice"));
-                    assertTrue(text.contains("Sofico track"));
+                    assertTrue(text.contains("Room 7"));
                 })
                 .thenAssertResults();
 
@@ -87,7 +87,7 @@ class PublicToolsMcpTest {
                     assertFalse(response.isError());
                     String text = response.firstContent().asText().text();
                     assertTrue(text.contains("MCP Security in Practice"));
-                    assertTrue(text.contains("Sofico track"));
+                    assertTrue(text.contains("Room 7"));
                 })
                 .thenAssertResults();
 

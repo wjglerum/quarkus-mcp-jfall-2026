@@ -66,20 +66,20 @@ class McpProtocolVersionTest {
                 // The server lists its versions newest first, so this pins 2026-07-28 as the latest.
                 .body("result.supportedVersions[0]", equalTo(LATEST))
                 .body("result._meta.'io.modelcontextprotocol/serverInfo'.name",
-                        equalTo("Porto Tech Hub 2026 Conference Companion"));
+                        equalTo("J-Fall 2026 Conference Companion"));
     }
 
     @Test
     void statelessClientCallsToolsWithoutASession() {
         when(api.listSessions(null, null, "MCP")).thenReturn(List.of(new SessionDto(1L,
-                "Practical MCP Security in Action", "OAuth 2.1 done right.", "Sofico track",
-                OffsetDateTime.parse("2026-11-10T11:10:00+00:00"), OffsetDateTime.parse("2026-11-10T12:00:00+00:00"),
+                "Practical MCP Security in Action", "OAuth 2.1 done right.", "Room 7",
+                OffsetDateTime.parse("2026-11-12T08:00:00+01:00"), OffsetDateTime.parse("2026-11-12T08:50:00+01:00"),
                 false, null, new SpeakerRef(1L, "Willem Jan Glerum"))));
 
         McpStreamableTestClient client = McpTestClients.authenticatedClient("willem.jan", Set.of("attendee"))
                 .setStateless()
                 .build()
-                .connect(init -> assertEquals("Porto Tech Hub 2026 Conference Companion", init.serverName()));
+                .connect(init -> assertEquals("J-Fall 2026 Conference Companion", init.serverName()));
 
         assertNull(client.mcpSessionId());
 
